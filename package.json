@@ -1,21 +1,58 @@
 {
-  "name": "opencode-context-shield",
+  "name": "@xesrevinu/opencode-context-shield",
   "version": "0.1.0",
-  "private": false,
   "type": "module",
   "description": "Context-reduction plugin for OpenCode with deterministic output compaction and backtest tooling",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "default": "./dist/src/index.js"
+    }
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "context",
+    "token-optimization",
+    "tool-output"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xesrevinu/opencode-context-shield.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xesrevinu/opencode-context-shield/issues"
+  },
+  "homepage": "https://github.com/xesrevinu/opencode-context-shield#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "bun run build",
     "test": "bun test",
     "typecheck": "tsc --noEmit",
     "backtest:session": "python3 scripts/backtest-session.py",
-    "backtest:batch": "python3 scripts/backtest-batch.py"
+    "backtest:batch": "python3 scripts/backtest-batch.py",
+    "pack:check": "npm pack --dry-run"
+  },
+  "peerDependencies": {
+    "@opencode-ai/plugin": ">=1.2.0"
   },
   "dependencies": {
-    "@opencode-ai/plugin": "*"
+    "@opencode-ai/plugin": "^1.2.15"
   },
   "devDependencies": {
+    "@types/node": "^22.15.21",
     "bun-types": "latest",
-    "typescript": "^5.8.2"
+    "typescript": "^5.9.3"
   }
 }

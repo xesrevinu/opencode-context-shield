@@ -29,22 +29,25 @@ Prompt cache pricing for Anthropic/OpenAI is often favorable, so the plugin favo
 
 This helps avoid unnecessary cache-prefix churn while still shrinking high-noise output.
 
-## Install
+## Install (recommended)
 
-### 1) Copy plugin file into your project config
+Use it as a packaged plugin in `opencode.jsonc`:
 
-OpenCode auto-loads `*.ts` in `.opencode/plugin/`.
+```jsonc
+{
+  "plugin": ["@xesrevinu/opencode-context-shield@latest"]
+}
+```
+
+Then restart OpenCode.
+
+## Install (local source mode)
+
+If you want to iterate locally instead of using npm:
 
 ```bash
 mkdir -p .opencode/plugin
 cp plugin/context-shield.ts .opencode/plugin/context-shield.ts
-```
-
-### 2) Ensure plugin package dependency exists
-
-```bash
-cd .opencode
-bun add @opencode-ai/plugin
 ```
 
 ## Runtime config
@@ -78,6 +81,14 @@ opencode run --format json "Call cshield_stats exactly once, then respond with O
 bun install
 bun run typecheck
 bun test
+bun run build
+```
+
+## Publish to npm
+
+```bash
+bun run build
+npm publish --access public
 ```
 
 ## Backtest scripts
