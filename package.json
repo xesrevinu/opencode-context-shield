@@ -1,0 +1,21 @@
+{
+  "name": "opencode-context-shield",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "Context-reduction plugin for OpenCode with deterministic output compaction and backtest tooling",
+  "license": "MIT",
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "backtest:session": "python3 scripts/backtest-session.py",
+    "backtest:batch": "python3 scripts/backtest-batch.py"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "*"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "typescript": "^5.8.2"
+  }
+}
