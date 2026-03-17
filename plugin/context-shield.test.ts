@@ -52,7 +52,10 @@ describe("ContextShieldPlugin", () => {
       expect(payload.output).toContain("[context-shield]");
       expect(payload.output.length).toBeLessThan(source.length);
 
-      const stats = await hooks.tool?.cshield_stats.execute({}, {} as any);
+      const statsTool = hooks.tool?.["cshield_stats"];
+      expect(statsTool).toBeDefined();
+
+      const stats = await statsTool!.execute({}, {} as any);
       expect(stats).toContain("Context shield stats");
       expect(stats).toContain("bash");
     });
@@ -77,7 +80,7 @@ describe("ContextShieldPlugin", () => {
         { args: readArgs },
       );
 
-      expect(readArgs.limit).toBe(800);
+      expect(readArgs["limit"]).toBe(800);
 
       const source = largeOutput();
       const payload: { title: string; output: string; metadata: Record<string, unknown> } = {
@@ -118,14 +121,17 @@ describe("ContextShieldPlugin", () => {
         { args },
       );
 
-      expect(args.prompt).toBeString();
-      expect(String(args.prompt)).toContain("CONTEXT-SHIELD SUBAGENT ROUTING");
+      expect(args["prompt"]).toBeString();
+      expect(String(args["prompt"])).toContain("CONTEXT-SHIELD SUBAGENT ROUTING");
     });
   });
 
   test("toggle disables compaction", async () => {
     await withPlugin(async (hooks) => {
-      await hooks.tool?.cshield_toggle.execute({ enabled: false }, {} as any);
+      const toggleTool = hooks.tool?.["cshield_toggle"];
+      expect(toggleTool).toBeDefined();
+
+      await toggleTool!.execute({ enabled: false }, {} as any);
 
       const after = hooks["tool.execute.after"];
       const source = largeOutput();

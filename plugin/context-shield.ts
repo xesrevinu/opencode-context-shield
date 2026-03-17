@@ -323,16 +323,16 @@ export const ContextShieldPlugin: Plugin = async ({ directory }) => {
       const args = output.args as Record<string, unknown>;
 
       if (input.tool === "read") {
-        const currentLimit = typeof args.limit === "number" ? args.limit : undefined;
+        const currentLimit = typeof args["limit"] === "number" ? args["limit"] : undefined;
         if (currentLimit === undefined || currentLimit > config.readLimit) {
-          args.limit = config.readLimit;
+          args["limit"] = config.readLimit;
         }
       }
 
       if (input.tool === "task") {
-        const currentPrompt = typeof args.prompt === "string" ? args.prompt : "";
+        const currentPrompt = typeof args["prompt"] === "string" ? args["prompt"] : "";
         if (currentPrompt && !currentPrompt.includes(TASK_ROUTING_TAG)) {
-          args.prompt = `${currentPrompt}\n\n${TASK_ROUTING_BLOCK}`;
+          args["prompt"] = `${currentPrompt}\n\n${TASK_ROUTING_BLOCK}`;
         }
       }
     },
@@ -376,9 +376,9 @@ export const ContextShieldPlugin: Plugin = async ({ directory }) => {
         const textParts = payload.content
           .filter(
             (item: Record<string, unknown>) =>
-              item.type === "text" && typeof item.text === "string",
+              item["type"] === "text" && typeof item["text"] === "string",
           )
-          .map((item: Record<string, unknown>) => item.text as string);
+          .map((item: Record<string, unknown>) => item["text"] as string);
 
         if (textParts.length === 0) return;
 
@@ -391,7 +391,7 @@ export const ContextShieldPlugin: Plugin = async ({ directory }) => {
 
         if (compacted.compacted) {
           const nonText = payload.content.filter(
-            (item: Record<string, unknown>) => item.type !== "text",
+            (item: Record<string, unknown>) => item["type"] !== "text",
           );
           payload.content = [{ type: "text", text: compacted.output }, ...nonText];
         }

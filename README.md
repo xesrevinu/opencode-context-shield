@@ -1,62 +1,39 @@
-# opencode-context-shield
+# @xesrevinu/opencode-context-shield
 
-Context reduction plugin for [OpenCode](https://opencode.ai), designed for real-world coding sessions with heavy tool output.
+Deterministic context-reduction plugin for OpenCode sessions with built-in backtest tooling.
 
-It compacts noisy tool results into deterministic summaries, keeps key error/warning signals, and provides built-in stats so you can measure savings.
+## Highlights
 
-## What it does
+- compacts large tool output while preserving the signals, head, and tail that matter
+- skips read and edit sensitive tools by default so file work stays intact
+- clamps noisy `read` calls and injects routing hints for subagent tasks
+- exposes `cshield_toggle` and `cshield_stats` helper tools for live control and measurement
+- includes replay-style Python backtests for evaluating real session history before rollout
 
-- Compacts large tool outputs in `tool.execute.after` using a stable template:
-  - `signals` (error/warn/test hints)
-  - `head` / `tail`
-  - omitted-line marker
-- Skips compaction for edit/read-sensitive tools by default:
-  - `read`, `edit`, `write`, `apply_patch`, `multiedit`, `lsp`
-- Adds guardrail: if compacted output is not smaller, keeps original output
-- Clamps `read` tool `limit` in `tool.execute.before` (default `800`)
-- Injects routing hints into `task` prompts to reduce context bloat from subagents
-- Adds two helper tools:
-  - `cshield_toggle`
-  - `cshield_stats`
+## Install
 
-## Why this is cache-friendly
-
-Prompt cache pricing for Anthropic/OpenAI is often favorable, so the plugin favors deterministic output:
-
-- No random `full_output_path` in compacted text
-- Stable line ordering and section structure
-- No timestamps in compacted payload body
-
-This helps avoid unnecessary cache-prefix churn while still shrinking high-noise output.
-
-## Install (recommended)
-
-Use it as a packaged plugin in `opencode.jsonc`:
+Use the published package from `opencode.jsonc`:
 
 ```jsonc
 {
-  "plugin": ["@xesrevinu/opencode-context-shield@latest"]
+  "plugin": ["@xesrevinu/opencode-context-shield@latest"],
 }
 ```
 
-Then restart OpenCode.
+Restart OpenCode after updating the plugin list.
 
-## Install (local source mode)
-
-If you want to iterate locally instead of using npm:
+If you want to iterate from a checkout instead of npm:
 
 ```bash
 mkdir -p .opencode/plugin
 cp plugin/context-shield.ts .opencode/plugin/context-shield.ts
 ```
 
-## Runtime config
+## Usage
 
-Config file is created automatically at:
+The plugin stores runtime config at `<project>/.opencode/state/context-shield.json`.
 
-`<project>/.opencode/state/context-shield.json`
-
-Default values:
+Default config:
 
 ```json
 {
@@ -67,35 +44,13 @@ Default values:
 }
 ```
 
-## Validate quickly
-
-Use OpenCode run mode:
+Quick smoke test:
 
 ```bash
 opencode run --format json "Call cshield_stats exactly once, then respond with OK."
 ```
 
-## Local development
-
-```bash
-bun install
-bun run typecheck
-bun test
-bun run build
-```
-
-## Publish to npm
-
-```bash
-bun run build
-npm publish --access public
-```
-
-## Backtest scripts
-
-These scripts evaluate expected context savings against your real `opencode.db` history.
-
-### Single session sweep
+Backtest a single session:
 
 ```bash
 python3 scripts/backtest-session.py \
@@ -104,7 +59,7 @@ python3 scripts/backtest-session.py \
   --target-kb 4
 ```
 
-### Batch sweep across real sessions
+Batch backtest recent sessions:
 
 ```bash
 python3 scripts/backtest-batch.py \
@@ -116,9 +71,27 @@ python3 scripts/backtest-batch.py \
   --read-limits 800,600,400,200
 ```
 
-Both scripts support `--json-out <file>` for machine-readable reports.
+## Development
 
-## Notes
+The repository uses Bun for dependency management and local commands.
 
-- Backtest is a replay-style estimate from stored tool outputs, not provider-side token accounting.
-- For final decisions, compare A/B runs in live sessions (`tokens.input`, cache read/write, cost).
+```bash
+bun install
+bun run check
+bun run backtest:session -- --help
+bun run backtest:batch -- --help
+```
+
+## Release
+
+This package uses Changesets plus the shared GitHub Actions release workflow.
+
+```bash
+bun run changeset
+bun run version-packages
+bun run release
+```
+
+## License
+
+MIT

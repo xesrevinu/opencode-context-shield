@@ -1,22 +1,28 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "preserve",
-    "moduleResolution": "bundler",
+    "outDir": "./dist",
+    "lib": ["ESNext"],
+    "target": "ESNext",
+    "module": "Preserve",
     "moduleDetection": "force",
-    "verbatimModuleSyntax": true,
+    "allowJs": false,
+    "types": ["bun"],
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "strict": true,
-    "exactOptionalPropertyTypes": true,
-    "noUnusedLocals": true,
-    "noImplicitOverride": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
     "noEmit": true,
-    "sourceMap": true,
+    "strict": true,
     "skipLibCheck": true,
-    "types": ["bun-types"]
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "exactOptionalPropertyTypes": true,
+    "isolatedModules": true
   },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["./src", "./plugin", "./tests", "./tsdown.config.ts"],
+  "exclude": ["dist", "node_modules"]
 }
